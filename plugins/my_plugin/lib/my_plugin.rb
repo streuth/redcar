@@ -8,6 +8,10 @@ module Redcar
       # Here's how the plugin menus are drawn. Try adding more
       # items or sub_menus.
       Menu::Builder.build do
+        sub_menu "My-Plugin" do
+          item "Edit My Plugin", EditMyPluginCommand
+          item "Reload My Plugin", ReloadMyPluginCommand
+        end
         sub_menu "Plugins" do
           sub_menu "My Plugin", :priority => 139 do
             item "Hello World!", HelloWorldCommand
@@ -16,6 +20,18 @@ module Redcar
         end
       end
     end
+    
+    
+    #Quick menu to reload my plugin
+    class ReloadMyPluginCommand < Redcar::Command
+      def execute
+        plugin = Redcar.plugin_manager.loaded_plugins.detect {|pl| pl.name == "my_plugin" }
+        puts plugin.inspect
+        Redcar.plugin_manager.load_plugin(plugin)
+        Redcar.app.refresh_menu!
+      end
+    end
+    
 
     # Example command: showing a dialog box.
     class HelloWorldCommand < Redcar::Command
@@ -29,7 +45,7 @@ module Redcar
     class EditMyPluginCommand < Redcar::Command
       def execute
         # Open the project in a new window
-        Project::Manager.open_project_for_path("plugins/my_plugin")
+        Project::Manager.open_project_for_path(Redcar.root)
         
         # Create a new edittab
         tab  = Redcar.app.focussed_window.new_tab(Redcar::EditTab)
