@@ -29,6 +29,17 @@ module Redcar
           FileUtils.rm(path)
         end
       end
+      
+      def execute_file(path)
+        command = "ruby \"#{path}\""
+        output = `#{command} 2>&1`
+        tab = output_tab
+        title = "[#{DateTime.now}]$ #{command}"
+        tab.document.text = "#{tab.document.to_s}" +
+          "#{"="*title.length}\n#{title}\n#{"="*title.length}\n\n#{output}"
+        tab.title = TITLE
+        tab.focus
+      end      
  
    end
 
