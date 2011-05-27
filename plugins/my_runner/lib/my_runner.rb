@@ -15,7 +15,23 @@ module Redcar
       end
     end
     
-    
+   class RunCurrentTab < EditTabCommand
+      TITLE = "Output"
+
+      def execute
+        path = doc.path
+        if path
+          execute_file(path)
+        else
+          path = File.join(Redcar.tmp_dir, "execute_file.rb")
+          File.open(path, "w") { |file| file.puts doc.to_s }
+          execute_file(path)
+          FileUtils.rm(path)
+        end
+      end
+ 
+   end
+
     #Quick menu to reload my plugin
     class ReloadMyRunnerCommand < Redcar::Command
       def execute
