@@ -9,13 +9,14 @@ module Redcar
       # items or sub_menus.
       Menu::Builder.build do
         sub_menu "My-Runner" do
+          item "Run Current Tab", RunCurrentTabCommand
           item "Edit My Runner", EditMyRunnerCommand
           item "Reload My Runner", ReloadMyRunnerCommand
         end
       end
     end
     
-   class RunCurrentTab < EditTabCommand
+   class RunCurrentTabCommand < EditTabCommand
       TITLE = "Output"
 
       def execute
@@ -29,6 +30,17 @@ module Redcar
           FileUtils.rm(path)
         end
       end
+      
+      def output_tab
+        tabs = win.notebooks.map {|nb| nb.tabs }.flatten
+        tabs.detect {|t| t.title == TITLE} || begin
+          notebook = Redcar::Application::OpenNewNotebookCommand.new.run
+          tab = win.focused_notebook.new_tab(Redcar::EditTab)
+          # tab = notebook.new_tab(Redcar::EditTab)
+          # tab = Top::OpenNewEditTabCommand.new.run
+          # result = tab
+        end
+      end      
       
       def execute_file(path)
         command = "ruby \"#{path}\""
