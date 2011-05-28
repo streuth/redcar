@@ -35,12 +35,28 @@ module Redcar
         tabs = win.notebooks.map {|nb| nb.tabs }.flatten
         tabs.detect {|t| t.title == TITLE} || begin
           notebook = Redcar::Application::OpenNewNotebookCommand.new.run
-          tab = win.focused_notebook.new_tab(Redcar::EditTab)
+          puts notebook.inspect
+          tab = Top::OpenNewEditTabCommand.new.run
+          puts tab.title
+          move_tab(tab)
+          result = tab
+          # tab = win.focussed_notebook.new_tab(Redcar::EditTab.new)
+          # puts tab.inspect
           # tab = notebook.new_tab(Redcar::EditTab)
           # tab = Top::OpenNewEditTabCommand.new.run
           # result = tab
         end
       end      
+      
+      def move_tab(tab)
+        current_notebook = tab.notebook
+        i = win.notebooks.index current_notebook
+
+        target_notebook = win.notebooks[ (i + 1) % win.notebooks.length ]
+        target_notebook.grab_tab_from(current_notebook, tab)
+        # tab.focus
+        win.rotate_notebooks
+      end
       
       def execute_file(path)
         command = "ruby \"#{path}\""
@@ -50,7 +66,7 @@ module Redcar
         tab.document.text = "#{tab.document.to_s}" +
           "#{"="*title.length}\n#{title}\n#{"="*title.length}\n\n#{output}"
         tab.title = TITLE
-        tab.focus
+        # tab.focus
       end      
  
    end
