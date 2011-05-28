@@ -16,6 +16,13 @@ module Redcar
       end
     end
     
+    def self.toolbars
+      ToolBar::Builder.build do
+        item "Execut Tab", :command => RunCurrentTabCommand, :icon => File.join(Redcar::ICONS_DIRECTORY, "control.png"), :barname => :my_runner
+      end
+    end
+
+    
    class RunCurrentTabCommand < EditTabCommand
       TITLE = "Output"
 
@@ -35,16 +42,9 @@ module Redcar
         tabs = win.notebooks.map {|nb| nb.tabs }.flatten
         tabs.detect {|t| t.title == TITLE} || begin
           notebook = Redcar::Application::OpenNewNotebookCommand.new.run
-          puts notebook.inspect
           tab = Top::OpenNewEditTabCommand.new.run
-          puts tab.title
           move_tab(tab)
           result = tab
-          # tab = win.focussed_notebook.new_tab(Redcar::EditTab.new)
-          # puts tab.inspect
-          # tab = notebook.new_tab(Redcar::EditTab)
-          # tab = Top::OpenNewEditTabCommand.new.run
-          # result = tab
         end
       end      
       
@@ -54,7 +54,6 @@ module Redcar
 
         target_notebook = win.notebooks[ (i + 1) % win.notebooks.length ]
         target_notebook.grab_tab_from(current_notebook, tab)
-        # tab.focus
         win.rotate_notebooks
       end
       
@@ -66,9 +65,7 @@ module Redcar
         tab.document.text = "#{tab.document.to_s}" +
           "#{"="*title.length}\n#{title}\n#{"="*title.length}\n\n#{output}"
         tab.title = TITLE
-        # tab.focus
       end      
- 
    end
 
     #Quick menu to reload my plugin
