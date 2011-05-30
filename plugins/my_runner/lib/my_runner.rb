@@ -10,6 +10,7 @@ module Redcar
       Menu::Builder.build do
         sub_menu "My-Runner" do
           item "Run Current Tab", RunCurrentTabCommand
+          item "Debug Current Tab", DebugTabCommand
           item "Edit My Runner", EditMyRunnerCommand
           item "Reload My Runner", ReloadMyRunnerCommand
         end
@@ -20,6 +21,7 @@ module Redcar
       ToolBar::Builder.build do
         # item "Execut Tab", :command => RunCurrentTabCommand, :icon => File.join(Redcar::ICONS_DIRECTORY, "ruby.png"), :barname => :my_runner
         item "Execute Tab", :command => RunCurrentTabCommand, :icon => File.join(Redcar::ICONS_DIRECTORY, "application-dock.png"), :barname => :my_runner
+        item "Debug Tab", :command => DebugTabCommand, :icon => File.join(Redcar::ICONS_DIRECTORY, "ruby.png"), :barname => :my_runner
         #could use application-documents.png
       end
     end
@@ -63,7 +65,7 @@ module Redcar
       end
       
       def execute_file(path)
-        command = "ruby \"#{path}\""
+        command = "jruby -S \"#{path}\""
         output = `#{command} 2>&1`
         tab = output_tab
         title = "[#{DateTime.now}]$ #{command}"
@@ -72,12 +74,25 @@ module Redcar
         tab.title = TITLE
       end      
    end
+  
+  class DebugTabCommand < RunCurrentTabCommand
+      def execute_file(path)
+        #client >> jruby --debug -S rdebug --client
+        #TODO figure out how to run interactively, this just hangs redcar and all output until it's finished
+        command = "jruby --debug -S rdebug --server \"#{path}\""
+        output = `#{command} 2>&1`
+        tab = output_tab
+        title = "[#{DateTime.now}]$ #{command}"
+        tab.document.text = "#{tab.document.to_s}" +
+          "#{"="*title.length}\n#{title}\n#{"="*title.length}\n\n#{output}"
+        tab.title = TITLE
+      end      
+  end
 
     #Quick menu to reload my plugin
     class ReloadMyRunnerCommand < Redcar::Command
       def execute
         plugin = Redcar.plugin_manager.loaded_plugins.detect {|pl| pl.name == "my_runner" }
-        puts plugin.inspect
         Redcar.plugin_manager.load_plugin(plugin)
         Redcar.app.refresh_menu!
       end

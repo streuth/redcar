@@ -5,6 +5,7 @@ module Redcar
 
       DEFAULT_ICON = :application_terminal
 
+      #argument is a notebook
       def initialize(*args, &block)
         super(*args,&block)
       end

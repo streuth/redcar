@@ -11,6 +11,15 @@ module Redcar
         sub_menu "My-Plugin" do
           item "Edit My Plugin", EditMyPluginCommand
           item "Reload My Plugin", ReloadMyPluginCommand
+          item "Edit Plugin - Comment", :command => EditPluginCommand, :value => "comment"
+          item "Open Streuth", :command => OpenProjectCommand, :value => "c:/dev/rails/streuth", :active => true #replace with check for path exists
+          item "Open Lick Lab", :command => OpenProjectCommand, :value => "c:/dev/rails/licklab",:active => true
+        end
+        sub_menu "Project" do
+          group(:priority => 100) {
+            item "Open Streuth", :command => OpenProjectCommand, :value => "c:/dev/rails/streuth"
+            item "Open Lick Lab", :command => OpenProjectCommand, :value => "c:/dev/rails/licklab"
+          }
         end
         sub_menu "Plugins" do
           sub_menu "My Plugin", :priority => 139 do
@@ -22,6 +31,16 @@ module Redcar
     end
     
     
+    class OpenProjectCommand < Redcar::Command
+      # sensitize :open_project
+      def execute(options)
+        if options[:value]
+          project = Redcar::Project::Manager.open_project_for_path(options[:value])
+          project.refresh if project
+        end
+      end
+    end
+
     #Quick menu to reload my plugin
     class ReloadMyPluginCommand < Redcar::Command
       def execute
@@ -59,5 +78,29 @@ module Redcar
         tab.focus
       end
     end
+
+    # Command to open a new window, make the project my_plugin
+    # and open this file.
+    class EditPluginCommand < Redcar::Command
+      def execute(options)
+        # Open the project in a new window
+        if options[:value]
+          plugin_name = options[:value]
+          Project::Manager.open_project_for_path(Redcar.root)
+          
+          # Create a new edittab
+          tab  = Redcar.app.focussed_window.new_tab(Redcar::EditTab)
+          
+          # A FileMirror's job is to wrap up the file in an interface that the Document understands.
+          mirror = Project::FileMirror.new(File.join(Redcar.root, "plugins", plugin_name, "lib", plugin_name+".rb"))
+          tab.edit_view.document.mirror = mirror
+  
+          # Make sure the tab is focussed and the user can't undo the insertion of the document text
+          tab.edit_view.reset_undo
+          tab.focus
+        end
+      end
+    end
+
   end
 end

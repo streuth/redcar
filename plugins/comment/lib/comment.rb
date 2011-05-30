@@ -157,6 +157,24 @@ module Redcar
         md[1].length
       end
       
+      def move_to_next_line(end_line)
+        return if end_line + 1 >= doc.line_count || end_line < 0
+        # puts "cursor_offset:" + cursor_offset.to_s
+        # 
+        # offset = doc.cursor_offset - doc.offset_at_line(end_line)
+        # puts "initial offset: " + offset.to_s
+        # if (doc.get_line_without_end_of_line(end_line+1).length < offset) 
+        #   add_offset = doc.get_line_without_end_of_line(end_line+1).length - 1
+        # else
+        #   add_offset = offset
+        # end
+        # puts "add_offset: #{add_offset.to_s}"
+        # puts "Final Offset: #{x.to_s}"
+        doc.cursor_offset = doc.offset_at_line(end_line + 1) 
+        doc.ensure_visible(doc.cursor_offset)
+      end
+
+      
       def execute
         type = Comment.comment_map["#{tab.edit_view.grammar.gsub("\"","")}"]
         if type
@@ -262,6 +280,7 @@ module Redcar
         else
           doc.set_selection_range(cursor_offset, cursor_offset)
         end
+        move_to_next_line(end_line)
       end
     end
   end
