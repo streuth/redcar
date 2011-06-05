@@ -11,8 +11,8 @@ module Redcar
         sub_menu "My-Runner" do
           item "Run Current Tab", RunCurrentTabCommand
           item "Debug Current Tab", DebugTabCommand
-          item "Edit My Runner", EditMyRunnerCommand
-          item "Reload My Runner", ReloadMyRunnerCommand
+          item "Edit Plugin - MyRunner", :command => Redcar::PluginSupport::EditPluginCommand, :value => "my_runner"
+          item "Reload Plugin - MyRunner", :command => Redcar::PluginSupport::ReloadPluginCommand, :value => "my_runner"
         end
       end
     end
@@ -25,7 +25,6 @@ module Redcar
         #could use application-documents.png
       end
     end
-
     
    class RunCurrentTabCommand < EditTabCommand
       TITLE = "Output"
@@ -75,7 +74,7 @@ module Redcar
       end      
    end
   
-  class DebugTabCommand < RunCurrentTabCommand
+    class DebugTabCommand < RunCurrentTabCommand
       def execute_file(path)
         #client >> jruby --debug -S rdebug --client
         #TODO figure out how to run interactively, this just hangs redcar and all output until it's finished
@@ -87,36 +86,7 @@ module Redcar
           "#{"="*title.length}\n#{title}\n#{"="*title.length}\n\n#{output}"
         tab.title = TITLE
       end      
-  end
+    end    
 
-    #Quick menu to reload my plugin
-    class ReloadMyRunnerCommand < Redcar::Command
-      def execute
-        plugin = Redcar.plugin_manager.loaded_plugins.detect {|pl| pl.name == "my_runner" }
-        Redcar.plugin_manager.load_plugin(plugin)
-        Redcar.app.refresh_menu!
-      end
-    end
-    
-
-    # Command to open a new window, make the project my_plugin
-    # and open this file.
-    class EditMyRunnerCommand < Redcar::Command
-      def execute
-        # Open the project in a new window
-        Project::Manager.open_project_for_path(Redcar.root)
-        
-        # Create a new edittab
-        tab  = Redcar.app.focussed_window.new_tab(Redcar::EditTab)
-        
-        # A FileMirror's job is to wrap up the file in an interface that the Document understands.
-        mirror = Project::FileMirror.new(File.join(Redcar.root, "plugins", "my_runner", "lib", "my_runner.rb"))
-        tab.edit_view.document.mirror = mirror
-
-        # Make sure the tab is focussed and the user can't undo the insertion of the document text
-        tab.edit_view.reset_undo
-        tab.focus
-      end
-    end
   end
 end
