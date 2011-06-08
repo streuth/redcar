@@ -1,4 +1,3 @@
-
 module Redcar
   class Comment
     def self.menus
@@ -176,6 +175,8 @@ module Redcar
 
       
       def execute
+        trace!
+  
         type = Comment.comment_map["#{tab.edit_view.grammar.gsub("\"","")}"]
         if type
           @comment = type["line_comment"]

@@ -11,7 +11,8 @@ module Redcar
         sub_menu "My-Plugin" do
           item "Edit - My Plugin", :command => Redcar::PluginSupport::EditPluginCommand, :value => "my_plugin"
           item "Reload - My Plugin", :command => Redcar::PluginSupport::ReloadPluginCommand, :value => "my_plugin"
-          item "Edit Plugin - Comment", :command => Redcar::PluginSupport::ReloadPluginCommand, :value => "comment"
+          item "Edit Plugin - Comment", :command => Redcar::PluginSupport::EditPluginCommand, :value => "comment"
+          item "Reload Plugin - Comment", :command => Redcar::PluginSupport::ReloadPluginCommand, :value => "comment"
           item "Load Plugin", LoadPluginCommand
           item "Open Streuth", :command => OpenProjectCommand, :value => "c:/dev/rails/streuth", :active => true #replace with check for path exists
           item "Open Lick Lab", :command => OpenProjectCommand, :value => "c:/dev/rails/licklab",:active => true #not very general but this is my ide :)

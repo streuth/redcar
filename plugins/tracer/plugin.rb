@@ -1,4 +1,3 @@
-
 Plugin.define do
   name    "tracer"
   version "1.0"
