@@ -2,8 +2,18 @@
 
 #todo - output to output tab
 #     - save methods to file and reload
+
+#class Class
+#  alias_method :old_new,  :new
+#  def new(*args)
+#    result = old_new(*args)
+#    return result
+#  end
+#end
+
 class Object
   puts "SHOULD BE DEFINING TRACER SUPPORT"
+    
   #Trace the specified methods, for now output to STDERR - want to change this the Output tab
   def trace!(*method) #add a boolean to trace private
     $_out = STDERR
@@ -17,7 +27,7 @@ class Object
     return if methods.empty?
     @_traced |= methods
     
-    $_out << "Tracing #{methods.join(', ')} on #{object_id}\n"
+    STDERR << "Tracing #{methods.join(', ')} on #{object_id}\n"
 
     #methods are defined on the eigenclass
     eigenclass = class << self; self; end
@@ -26,11 +36,12 @@ class Object
       eigenclass.class_eval %Q{
       def #{m}(*args, &block)
         begin
-          $_out << "Entering: #{m}(\#{args.join(', ')})\n"
+          STDERR << "Entering: #{m}(\#{args.join(', ')})\n"
           result = super
-          $_out << "Exiting: #{m} with \#{result}\n"
+          STDERR << "Exiting: #{m} with \#{result}\n"
+          result
         rescue
-          $_out << "Aborting: #{m}: \#{$!.class}: \#{$!.message}"
+          STDERR << "Aborting: #{m}: \#{$!.class}: \#{$!.message}"
           raise
         end
       end
