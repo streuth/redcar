@@ -18,6 +18,29 @@ module Redcar
       end
     end
     
+    def self.edit_view_context_menus
+      Menu::Builder.build do
+        group(:priority => 40) do
+          item ("Trace Class"  ) { Redcar::Tracer::TraceClassFromSelectionCommand.new.run  }
+        end
+      end
+    end
+    
+    class TraceClassFromSelectionCommand < Redcar::DocumentCommand
+
+      def execute
+        if doc.selection?
+          text = doc.selection_ranges.map do |range|
+            doc.get_range(range.begin, range.count)
+          #trick will be to expand selection to fully qualified name
+          end
+          puts text
+        else
+          puts doc.get_line(doc.cursor_line)
+        end
+      end
+    end
+
     class TraceClassCommand < Redcar::Command
       def execute
         result = Application::Dialog.input("Enter ", "Please enter plugin name:", "my_runner") do |text|

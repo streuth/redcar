@@ -2,6 +2,7 @@ module Redcar
   # This class is your plugin. Try adding new commands in here
   # and putting them in the menus.
   class MyRunner
+    TITLE = "Output"
   
     # This method is run as Redcar is booting up.
     def self.menus
@@ -26,24 +27,8 @@ module Redcar
       end
     end
     
-   class RunCurrentTabCommand < EditTabCommand
-      TITLE = "Output"
-
-      def execute
-        # current_tab = Redcar.app.focussed_window.focussed_notebook_tab
-        current_tab = tab
-        path = doc.path
-        if path
-          execute_file(path)
-        else
-          path = File.join(Redcar.tmp_dir, "execute_file.rb")
-          File.open(path, "w") { |file| file.puts doc.to_s }
-          execute_file(path)
-          FileUtils.rm(path)
-        end
-        current_tab.focus
-      end
-      
+    
+    class OutputTabCommand < EditTabCommand
       def output_tab
         tabs = win.notebooks.map {|nb| nb.tabs }.flatten
         tabs.detect {|t| t.title == TITLE} || begin
@@ -62,6 +47,24 @@ module Redcar
         target_notebook.grab_tab_from(current_notebook, tab)
         win.rotate_notebooks
       end
+    end
+
+    class RunCurrentTabCommand < OutputTabCommand
+
+      def execute
+        # current_tab = Redcar.app.focussed_window.focussed_notebook_tab
+        current_tab = tab
+        path = doc.path
+        if path
+          execute_file(path)
+        else
+          path = File.join(Redcar.tmp_dir, "execute_file.rb")
+          File.open(path, "w") { |file| file.puts doc.to_s }
+          execute_file(path)
+          FileUtils.rm(path)
+        end
+        current_tab.focus
+      end
       
       def execute_file(path)
         command = "jruby -S \"#{path}\""
@@ -74,7 +77,7 @@ module Redcar
       end      
    end
   
-    class DebugTabCommand < RunCurrentTabCommand
+   class DebugTabCommand < RunCurrentTabCommand
       def execute_file(path)
         #client >> jruby --debug -S rdebug --client
         #TODO figure out how to run interactively, this just hangs redcar and all output until it's finished
@@ -86,7 +89,8 @@ module Redcar
           "#{"="*title.length}\n#{title}\n#{"="*title.length}\n\n#{output}"
         tab.title = TITLE
       end      
-    end    
+    end
+    
 
   end
 end

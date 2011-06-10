@@ -1,5 +1,21 @@
 puts "hello world  xxxx  "
 s = "Woo Hoo"
-puts s
-puts "blah blah blah"
+
+
+name = "String"
+
+c = Kernel.const_get(name)
+puts c.inspect
+
+c.class_eval {
+  def foo
+    "FOO BAR"
+  end
+}
+
+
+puts "".foo
+
+eval(name)  #or eval(:Name.to_s)
+
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         
