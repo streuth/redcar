@@ -11,10 +11,41 @@
 #  end
 #end
 
+module Kernel
+  def qualified_const_get(str)
+    path = str.to_s.split('::')
+    from_root = path[0].empty?
+    if from_root
+      from_root = []
+      path = path[1..-1]
+    else
+      start_ns = ((Class === self)||(Module === self)) ? self : self.class
+      from_root = start_ns.to_s.split('::')
+    end
+    until from_root.empty?
+      begin
+        return (from_root+path).inject(Object) { |ns,name| ns.const_get(name) }
+      rescue NameError
+        from_root.delete_at(-1)
+      end
+    end
+    path.inject(Object) { |ns,name| ns.const_get(name) }
+  end
+  
+  def class_exists?(class_name)
+    klass = qualifed_const_get(class_name)
+    return klass.is_a?(Class)
+  rescue NameError
+    return false
+  end  
+end
+
 class Object
   puts "SHOULD BE DEFINING TRACER SUPPORT"
     
-  #Trace the specified methods, for now output to STDERR - want to change this the Output tab
+
+
+#Trace the specified methods, for now output to STDERR - want to change this the Output tab
   def trace!(*method) #add a boolean to trace private
     $_out = STDERR
     

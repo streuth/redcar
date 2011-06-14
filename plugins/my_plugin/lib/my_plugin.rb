@@ -16,6 +16,7 @@ module Redcar
           item "Load Plugin", LoadPluginCommand
           item "Open Streuth", :command => OpenProjectCommand, :value => "c:/dev/rails/streuth", :active => true #replace with check for path exists
           item "Open Lick Lab", :command => OpenProjectCommand, :value => "c:/dev/rails/licklab",:active => true #not very general but this is my ide :)
+          item "Open Ioke", :command => OpenProjectCommand, :value => "c:/git/ioke",:active => true #not very general but this is my ide :)
         end
         sub_menu "Project" do
           group(:priority => 100) {
