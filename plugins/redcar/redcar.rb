@@ -246,6 +246,18 @@ Redcar.environment: #{Redcar.environment}
       end
     end
     
+    class MoveUpCommand < EditTabCommand
+      def execute
+        tab.edit_view.invoke_action(:LINE_UP)
+      end
+    end
+    
+    class MoveDownCommand < EditTabCommand
+      def execute
+        tab.edit_view.invoke_action(:LINE_DOWN)
+      end
+    end
+    
     class ForwardCharCommand < DocumentCommand
       def execute
         doc.cursor_offset = [doc.cursor_offset + 1, doc.length].min
@@ -258,6 +270,14 @@ Redcar.environment: #{Redcar.environment}
       end
     end
     
+    class OpenLineCommand < DocumentCommand
+      def execute
+        prev = doc.cursor_offset
+        doc.insert_at_cursor("\n")
+        doc.cursor_offset = prev
+      end
+    end
+
     class DeleteCharCommand < DocumentCommand
       def execute
         if doc.cursor_offset < doc.length
@@ -465,6 +485,25 @@ Redcar.environment: #{Redcar.environment}
         doc.scroll_to_line(last_line_ix + 1)
       end
     end
+    
+    class TransposeCharactersCommand < Redcar::DocumentCommand
+      def execute
+        line        = doc.get_line(doc.cursor_line)
+        line_offset = doc.cursor_line_offset
+        
+        if line_offset > 0 and line.length >= 2
+          if line_offset < line.length - 1
+            first_char  = line.chars[line_offset - 1].to_s
+            second_char = line.chars[line_offset].to_s
+            doc.replace(doc.cursor_offset - 1, 2, second_char + first_char)
+          elsif line_offset == line.length - 1
+            first_char  = line.chars[line_offset - 2].to_s
+            second_char = line.chars[line_offset - 1].to_s
+            doc.replace(doc.cursor_offset - 2, 2, second_char + first_char)
+          end
+        end
+      end
+    end
 
     class SortLinesCommand < Redcar::DocumentCommand
 
@@ -617,6 +656,7 @@ Redcar.environment: #{Redcar.environment}
         link "Cmd+C",        CopyCommand
         link "Cmd+V",        PasteCommand
         link "Cmd+D",        DuplicateCommand
+        link "Ctrl+T",       TransposeCharactersCommand
 
         link "Home",    MoveTopCommand
         link "Ctrl+A",  MoveHomeCommand
@@ -624,6 +664,10 @@ Redcar.environment: #{Redcar.environment}
         link "End",     MoveBottomCommand
         link "Ctrl+F",  ForwardCharCommand
         link "Ctrl+B",  BackwardCharCommand
+        link "Ctrl+P",  MoveUpCommand
+        link "Ctrl+N",  MoveDownCommand
+        link "Ctrl+B",  BackwardCharCommand
+        link "Ctrl+O",  OpenLineCommand
         link "Ctrl+D",  DeleteCharCommand
         link "Ctrl+H",  BackspaceCommand
 
@@ -858,8 +902,15 @@ Redcar.environment: #{Redcar.environment}
               
               item "Forward Character",  ForwardCharCommand
               item "Backward Character", BackwardCharCommand
+              item "Previous Line",      MoveUpCommand
+              item "Next Line",          MoveDownCommand
+              item "Open Line",          OpenLineCommand
+              
+              separator
+              
               item "Delete Character",   DeleteCharCommand
               item "Backspace",          BackspaceCommand
+              item "Transpose",          TransposeCharactersCommand
             end
           end
 
