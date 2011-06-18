@@ -375,7 +375,17 @@ module Redcar
       end
     end
 
-    def type_character(character)
+    def left_click(mouse_event)
+      if @model.document.controller and @model.document.controller.respond_to?(:left_click)
+        location = ApplicationSWT.display.get_cursor_location
+        #offset = @mate_text.parser.styledText.get_offset_at_location(location)
+        Redcar.safely("left click on edit view") do
+          @model.document.controller.left_click(@model)
+        end
+      end
+    end
+
+  def type_character(character)
       mate_text.get_text_widget.doContent(character)
       mate_text.get_text_widget.update
     end
@@ -582,7 +592,9 @@ module Redcar
       end
 
       def mouse_down(e)
-        if e.button == 3
+        if e.button == 1
+          @obj.left_click(e)
+        elsif e.button == 3
           @obj.right_click(e)
         end
       end

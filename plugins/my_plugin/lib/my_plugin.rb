@@ -13,6 +13,10 @@ module Redcar
           item "Reload - My Plugin", :command => Redcar::PluginSupport::ReloadPluginCommand, :value => "my_plugin"
           item "Edit Plugin - Comment", :command => Redcar::PluginSupport::EditPluginCommand, :value => "comment"
           item "Reload Plugin - Comment", :command => Redcar::PluginSupport::ReloadPluginCommand, :value => "comment"
+          item "Edit Plugin - edit_view_swt", :command => Redcar::PluginSupport::EditPluginCommand, :value => "edit_view_swt"
+          item "Reload Plugin - edit_view_swt", :command => Redcar::PluginSupport::ReloadPluginCommand, :value => "edit_view_swt"
+          item "Edit Plugin - edit_view", :command => Redcar::PluginSupport::EditPluginCommand, :value => "edit_view"
+          item "Reload Plugin - edit_view", :command => Redcar::PluginSupport::ReloadPluginCommand, :value => "edit_view"
           item "Load Plugin", LoadPluginCommand
           item "Open Streuth", :command => OpenProjectCommand, :value => "c:/dev/rails/streuth", :active => true #replace with check for path exists
           item "Open Lick Lab", :command => OpenProjectCommand, :value => "c:/dev/rails/licklab",:active => true #not very general but this is my ide :)
@@ -33,6 +37,14 @@ module Redcar
       end
     end
     
+    def self.edit_view_context_menus
+      Menu::Builder.build do
+        group(:priority => 40) do
+          item ("Go To Tag"  ) { Redcar::Declarations::GoToTagCommand.new.run  }
+        end
+      end
+    end
+
     
     class OpenProjectCommand < Redcar::Command
       # sensitize :open_project

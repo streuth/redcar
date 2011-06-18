@@ -121,6 +121,7 @@ module Redcar
       end
 
       def handle_tag(token = '')
+        puts "Declarations:handle_tag"
         tags_path = Declarations.file_path(Project::Manager.focussed_project)
         unless ::File.exist?(tags_path)
           Application::Dialog.message_box("The declarations file 'tags' has not been generated yet.")

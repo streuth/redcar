@@ -11,6 +11,12 @@ module Redcar
         @jface_document = swt_mate_document.mateText.get_document
       end
 
+      def left_click(edit_view)
+        #TODO: qualify with ctrl key and then underline location
+        #TODO: then make pluggable so the key stroke is mapped in the keystrokes (so any command can be applied)
+        #Redcar::Declarations::GoToTagCommand.new.run
+      end
+      
       def right_click(edit_view)
         menu = Menu.new
         Redcar.plugin_manager.objects_implementing(:edit_view_context_menus).each do |object|
