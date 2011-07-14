@@ -11,16 +11,27 @@ module Redcar
         sub_menu "My-Plugin" do
           item "Edit - My Plugin", :command => Redcar::PluginSupport::EditPluginCommand, :value => "my_plugin"
           item "Reload - My Plugin", :command => Redcar::PluginSupport::ReloadPluginCommand, :value => "my_plugin"
-          item "Edit Plugin - Comment", :command => Redcar::PluginSupport::EditPluginCommand, :value => "comment"
-          item "Reload Plugin - Comment", :command => Redcar::PluginSupport::ReloadPluginCommand, :value => "comment"
-          item "Edit Plugin - edit_view_swt", :command => Redcar::PluginSupport::EditPluginCommand, :value => "edit_view_swt"
-          item "Reload Plugin - edit_view_swt", :command => Redcar::PluginSupport::ReloadPluginCommand, :value => "edit_view_swt"
-          item "Edit Plugin - edit_view", :command => Redcar::PluginSupport::EditPluginCommand, :value => "edit_view"
-          item "Reload Plugin - edit_view", :command => Redcar::PluginSupport::ReloadPluginCommand, :value => "edit_view"
-          item "Load Plugin", LoadPluginCommand
-          item "Open Streuth", :command => OpenProjectCommand, :value => "c:/dev/rails/streuth", :active => true #replace with check for path exists
-          item "Open Lick Lab", :command => OpenProjectCommand, :value => "c:/dev/rails/licklab",:active => true #not very general but this is my ide :)
-          item "Open Ioke", :command => OpenProjectCommand, :value => "c:/git/ioke",:active => true #not very general but this is my ide :)
+          sub_menu "Work in Progress", :priority => 100 do
+            item "Edit Plugin - Comment", :command => Redcar::PluginSupport::EditPluginCommand, :value => "comment"
+            item "Reload Plugin - Comment", :command => Redcar::PluginSupport::ReloadPluginCommand, :value => "comment"
+            item "Edit Plugin - edit_view_swt", :command => Redcar::PluginSupport::EditPluginCommand, :value => "edit_view_swt"
+            item "Reload Plugin - edit_view_swt", :command => Redcar::PluginSupport::ReloadPluginCommand, :value => "edit_view_swt"
+            item "Edit Plugin - edit_view", :command => Redcar::PluginSupport::EditPluginCommand, :value => "edit_view"
+            item "Reload Plugin - edit_view", :command => Redcar::PluginSupport::ReloadPluginCommand, :value => "edit_view"
+          end
+          sub_menu "Rails", :priority => 80 do
+            item "Open Streuth Blues", :command => OpenProjectCommand, :value => "c:/dev/rails/streuthblues", :active => true #replace with check for path exists
+            item "Open Lick Lab", :command => OpenProjectCommand, :value => "c:/dev/rails/licklab",:active => true #not very general but this is my ide :)
+            item "Open Sample App", :command => OpenProjectCommand, :value => "c:/dev/rails/tutorials/rails3tutorials/sample_app",:active => true #not very general but this is my ide :)
+          end
+          sub_menu "Other Projects", :priority => 100 do
+            item "Html Lessons", :command => OpenProjectCommand, :value => "c:/dev/html", :active => true #replace with check for path exists
+            item "Ruby Koan", :command => OpenProjectCommand, :value => "c:/dev/ruby/ruby_koans", :active => true #replace with check for path exists
+          end
+          group(:priority => 110) {
+            item "Open Ioke", :command => OpenProjectCommand, :value => "c:/git/ioke",:active => true #not very general but this is my ide :)
+            item "Load Plugin", LoadPluginCommand
+          }
         end
         sub_menu "Project" do
           group(:priority => 100) {

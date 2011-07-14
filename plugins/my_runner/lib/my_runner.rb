@@ -12,7 +12,8 @@ module Redcar
         sub_menu "My-Runner" do
           item "Run Current Tab", RunCurrentTabCommand
           item "Clear Ouput Tab", ClearOutputTabCommand
-          item "Debug Current Tab", DebugTabCommand
+          item "Show HTML Preview", ShowBrowserBar
+          item "Debug Current Tab - Not Working", DebugTabCommand
           item "Edit Plugin - MyRunner", :command => Redcar::PluginSupport::EditPluginCommand, :value => "my_runner"
           item "Reload Plugin - MyRunner", :command => Redcar::PluginSupport::ReloadPluginCommand, :value => "my_runner"
         end
@@ -89,6 +90,8 @@ module Redcar
         command = "jruby -S \"#{path}\""
         output = `#{command} 2>&1`
         tab = output_tab
+        tab.document.text = ""
+      
         title = "[#{DateTime.now}]$ #{command}"
         tab.document.text = "#{tab.document.to_s}" +
           "#{"="*title.length}\n#{title}\n#{"="*title.length}\n\n#{output}"
@@ -110,6 +113,15 @@ module Redcar
       end      
     end
     
+
+    class ShowBrowserBar < Redcar::Command
+      def execute
+        if win = Redcar.app.focussed_window
+          speedbar = Redcar::HtmlView::BrowserBar.new
+          win.open_speedbar(speedbar)
+        end
+      end
+    end
 
   end
 end
