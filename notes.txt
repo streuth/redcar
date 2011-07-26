@@ -1,0 +1,31 @@
+cmd_enter_pressed - search for this, want to add a shift enter to move past the end of the enclosing thing, have to figure out how 
+move past whatever the enclosing thing is <%= " " =>, so how does redcar know what it's inside of where it ends
+
+
+CmdEnterHandler in cmd_enter.rb
+
+
+how to auto close whatever outer tag you are in
+
+Is there a way from the keyboard to insert templates, how do I disable templates
+
+
+partial refactoring
+
+
+topics
+  topic
+    bookmark
+      note
+      
+      
+right click on gemfile, to do a bundle install
+
+
+
+would like indent to go to parameter (especially for hashes)
+  validates :name, :presence => true,
+                   :
+just better indenting period
+
+fix search position bug

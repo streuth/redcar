@@ -32,6 +32,8 @@ pkg
 plugins/core/spec/core/*.yaml
 plugins/scm_svn/features/fixtures
 
+plugins/spray/
+
 tmp
 plugins/repl/vendor/clojure-contrib.jar
 plugins/repl/vendor/clojure.jar

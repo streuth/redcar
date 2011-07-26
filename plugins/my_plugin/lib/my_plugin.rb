@@ -22,11 +22,12 @@ module Redcar
           sub_menu "Rails", :priority => 80 do
             item "Open Streuth Blues", :command => OpenProjectCommand, :value => "c:/dev/rails/streuthblues", :active => true #replace with check for path exists
             item "Open Lick Lab", :command => OpenProjectCommand, :value => "c:/dev/rails/licklab",:active => true #not very general but this is my ide :)
+            # item "Open My Lick Lab", :command => OpenProjectCommand, :value => "c:/dev/rails/mylicklab",:active => true #not very general but this is my ide :)
             item "Open Sample App", :command => OpenProjectCommand, :value => "c:/dev/rails/tutorials/rails3tutorials/sample_app",:active => true #not very general but this is my ide :)
           end
           sub_menu "Other Projects", :priority => 100 do
             item "Html Lessons", :command => OpenProjectCommand, :value => "c:/dev/html", :active => true #replace with check for path exists
-            item "Ruby Koan", :command => OpenProjectCommand, :value => "c:/dev/ruby/ruby_koans", :active => true #replace with check for path exists
+            item "Ruby Projects", :command => OpenProjectCommand, :value => "c:/dev/ruby", :active => true #replace with check for path exists
           end
           group(:priority => 110) {
             item "Open Ioke", :command => OpenProjectCommand, :value => "c:/git/ioke",:active => true #not very general but this is my ide :)
