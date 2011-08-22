@@ -1,0 +1,4 @@
+pkg
+rdoc
+*.gemspec
+.redcar

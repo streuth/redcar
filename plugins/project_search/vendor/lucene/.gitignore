@@ -1,0 +1,9 @@
+# ignore netbeans specific stuff
+nbproject
+
+# ignore Rubymine
+.idea
+
+.rvmrc
+.bundle
+
