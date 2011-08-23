@@ -22,9 +22,9 @@ module Redcar
     
     def self.toolbars
       ToolBar::Builder.build do
-        # item "Execut Tab", :command => RunCurrentTabCommand, :icon => File.join(Redcar::ICONS_DIRECTORY, "ruby.png"), :barname => :my_runner
-        item "Execute Tab", :command => RunCurrentTabCommand, :icon => File.join(Redcar::ICONS_DIRECTORY, "application-dock.png"), :barname => :my_runner
-        item "Clear Output Tab", :command => ClearOutputTabCommand, :icon => File.join(Redcar::ICONS_DIRECTORY, "notebook--minus.png"), :barname => :my_runner
+        # item "Execut Tab", :command => RunCurrentTabCommand, :icon => File.join(Redcar.icons_directory, "ruby.png"), :barname => :my_runner
+        item "Execute Tab", :command => RunCurrentTabCommand, :icon => File.join(Redcar.icons_directory, "application-dock.png"), :barname => :my_runner
+        item "Clear Output Tab", :command => ClearOutputTabCommand, :icon => File.join(Redcar.icons_directory, "notebook--minus.png"), :barname => :my_runner
         #could use application-documents.png
       end
     end
